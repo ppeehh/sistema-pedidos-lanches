@@ -1,0 +1,51 @@
+/* Ajustes globais */
+body {
+    font-size: 18px;              /* melhor leitura em evento */
+}
+
+/* Cartão principal */
+.card {
+    border-radius: 16px;
+}
+
+/* Inputs maiores (dedo, celular) */
+input,
+textarea {
+    font-size: 18px;
+    padding: 14px;
+}
+
+/* Botão principal (Enviar Pedido) */
+.btn-success {
+    font-size: 20px;
+    padding: 14px;
+    font-weight: bold;
+}
+
+/* Botão secundário */
+.btn-outline-secondary {
+    font-size: 18px;
+    padding: 12px;
+}
+
+/* Cards da chapa / histórico */
+.card p,
+.card small {
+    font-size: 16px;
+}
+
+/* ALERTAS DE ESTOQUE (para o futuro) */
+.estoque-ok {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.estoque-baixo {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.estoque-critico {
+    background-color: #f8d7da;
+    color: #721c24;
+}
