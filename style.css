@@ -98,3 +98,26 @@ select {
     color: #ffffff !important;
     border: 1px solid #444;
 }
+
+/* =========================
+   AJUSTES MOBILE
+========================= */
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* Evita zoom automático em inputs */
+input,
+textarea,
+select {
+    font-size: 16px !important;
+}
+
+/* Card ocupa melhor a tela no celular */
+@media (max-width: 576px) {
+    .card {
+        padding: 16px;
+        border-radius: 12px;
+    }
+}

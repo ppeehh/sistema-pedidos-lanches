@@ -16,6 +16,7 @@ $produtos = $conn->query("
     <title>Novo Pedido</title>
 
     <!-- Bootstrap -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- CSS próprio -->
@@ -24,83 +25,103 @@ $produtos = $conn->query("
 
 <body class="bg-light">
 
-<div class="container d-flex justify-content-center align-items-center vh-100">
-    <div class="card p-4 shadow w-100" style="max-width: 520px;">
+<div class="container-fluid px-2 px-sm-3 py-3">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
 
-        <!-- 🔽 MENU -->
-        <div class="d-flex gap-2 mb-3">
-            <a href="index.php" class="btn btn-primary w-100">🏠 Início</a>
-            <a href="estoque.php" class="btn btn-warning w-100">📦 Estoque</a>
-            <a href="historico.php" class="btn btn-secondary w-100">📄 Histórico</a>
-        </div>
+            <div class="card p-3 p-sm-4 shadow w-100">
 
-        <!-- 🔽 BOTÃO ENCERRAR EVENTO -->
-        <a
-            href="encerrar_evento.php"
-            class="btn btn-danger w-100 mb-3"
-            onclick="return confirm('Tem certeza que deseja encerrar o evento? Isso apagará pedidos e estoque.')"
-        >
-            🛑 Encerrar Evento
-        </a>
-        <!-- 🔼 FIM ENCERRAR EVENTO -->
+                <!-- 🔽 MENU -->
+                <div class="row g-2 mb-3">
+                    <div class="col-12 col-md-4">
+                        <a href="index.php" class="btn btn-primary w-100">🏠 Início</a>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <a href="estoque.php" class="btn btn-warning w-100">📦 Estoque</a>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <a href="historico.php" class="btn btn-secondary w-100">📄 Histórico</a>
+                    </div>
+                </div>
 
-        <h4 class="text-center mb-3">Novo Pedido</h4>
+                <!-- 🔽 BOTÃO ENCERRAR EVENTO -->
+                <a
+                    href="encerrar_evento.php"
+                    class="btn btn-danger w-100 mb-3"
+                    onclick="return confirm('Tem certeza que deseja encerrar o evento? Isso apagará pedidos e estoque.')"
+                >
+                    🛑 Encerrar Evento
+                </a>
 
-        <form action="salvar_pedido.php" method="post">
+                <h4 class="text-center mb-3">Novo Pedido</h4>
 
-            <!-- Nome do cliente -->
-            <input
-                class="form-control mb-2"
-                type="text"
-                name="nome"
-                placeholder="Nome do cliente"
-                required
-            >
+                <form action="salvar_pedido.php" method="post">
 
-            <!-- Observações gerais -->
-            <textarea
-                class="form-control mb-3"
-                name="observacoes"
-                placeholder="Observações (ex: sem cebola, bem passado, etc)"
-            ></textarea>
-
-            <!-- 🔽 PRODUTOS -->
-            <div id="produtos-container">
-
-                <div class="d-flex gap-2 mb-2 produto-item">
-                    <select name="produtos[]" class="form-select" required>
-                        <option value="">Selecione o produto</option>
-                        <?php while ($p = $produtos->fetch_assoc()) { ?>
-                            <option value="<?= htmlspecialchars($p['produto']) ?>">
-                                <?= htmlspecialchars($p['produto']) ?> (<?= $p['quantidade_atual'] ?> disponíveis)
-                            </option>
-                        <?php } ?>
-                    </select>
-
+                    <!-- Nome do cliente -->
                     <input
-                        type="number"
-                        name="quantidades[]"
-                        class="form-control"
-                        placeholder="Qtd"
-                        min="1"
+                        class="form-control mb-2"
+                        type="text"
+                        name="nome"
+                        placeholder="Nome do cliente"
                         required
                     >
 
-                    <button type="button" class="btn btn-danger btn-remove">✖</button>
-                </div>
+                    <!-- Observações gerais -->
+                    <textarea
+                        class="form-control mb-3"
+                        name="observacoes"
+                        placeholder="Observações (ex: sem cebola, bem passado, etc)"
+                    ></textarea>
+
+                    <!-- 🔽 PRODUTOS -->
+                    <div id="produtos-container">
+
+                        <!-- ITEM -->
+                        <div class="row g-2 mb-2 produto-item">
+
+                            <div class="col-12 col-md-7">
+                                <select name="produtos[]" class="form-select" required>
+                                    <option value="">Selecione o produto</option>
+                                    <?php while ($p = $produtos->fetch_assoc()) { ?>
+                                        <option value="<?= htmlspecialchars($p['produto']) ?>">
+                                            <?= htmlspecialchars($p['produto']) ?> (<?= $p['quantidade_atual'] ?> disponíveis)
+                                        </option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+
+                            <div class="col-6 col-md-3">
+                                <input
+                                    type="number"
+                                    name="quantidades[]"
+                                    class="form-control"
+                                    placeholder="Qtd"
+                                    min="1"
+                                    required
+                                >
+                            </div>
+
+                            <div class="col-6 col-md-2 d-flex align-items-end">
+                                <button type="button" class="btn btn-danger w-100 btn-remove">✖</button>
+                            </div>
+
+                        </div>
+                        <!-- FIM ITEM -->
+
+                    </div>
+                    <!-- 🔼 FIM PRODUTOS -->
+
+                    <button type="button" class="btn btn-outline-secondary w-100 mb-3" id="add-produto">
+                        ➕ Adicionar Produto
+                    </button>
+
+                    <button class="btn btn-success w-100">
+                        Enviar Pedido
+                    </button>
+                </form>
 
             </div>
-            <!-- 🔼 FIM PRODUTOS -->
-
-            <button type="button" class="btn btn-outline-secondary w-100 mb-3" id="add-produto">
-                ➕ Adicionar Produto
-            </button>
-
-            <button class="btn btn-success w-100">
-                Enviar Pedido
-            </button>
-        </form>
-
+        </div>
     </div>
 </div>
 
@@ -122,7 +143,7 @@ $produtos = $conn->query("
         if (e.target.classList.contains('btn-remove')) {
             const items = container.querySelectorAll('.produto-item');
             if (items.length > 1) {
-                e.target.parentElement.remove();
+                e.target.closest('.produto-item').remove();
             }
         }
     });
