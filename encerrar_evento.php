@@ -1,12 +1,22 @@
 <?php
 include 'db.php';
 
-/* Apaga pedidos do evento */
-$conn->query("TRUNCATE TABLE pedidos");
+/*
+ ORDEM IMPORTANTE:
+ 1. itens_pedido (filha)
+ 2. pedidos (pai)
+ 3. estoque
+*/
 
-/* Apaga estoque do evento */
-$conn->query("TRUNCATE TABLE estoque");
+$conn->query("DELETE FROM itens_pedido");
+$conn->query("DELETE FROM pedidos");
+$conn->query("DELETE FROM estoque");
 
-/* Volta para o início */
+/* (Opcional) resetar IDs */
+$conn->query("ALTER TABLE itens_pedido AUTO_INCREMENT = 1");
+$conn->query("ALTER TABLE pedidos AUTO_INCREMENT = 1");
+$conn->query("ALTER TABLE estoque AUTO_INCREMENT = 1");
+
+/* Volta para início */
 header("Location: index.php");
 exit;

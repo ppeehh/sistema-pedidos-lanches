@@ -2,7 +2,12 @@
 include 'db.php';
 
 // Busca pedidos pendentes
-$result = $conn->query("SELECT * FROM pedidos WHERE status='pendente' ORDER BY criado_em ASC");
+$pedidos = $conn->query("
+    SELECT * 
+    FROM pedidos 
+    WHERE status = 'pendente' 
+    ORDER BY criado_em ASC
+");
 ?>
 
 <!DOCTYPE html>
@@ -53,32 +58,52 @@ $result = $conn->query("SELECT * FROM pedidos WHERE status='pendente' ORDER BY c
 
 <body>
 <div class="container-fluid p-3">
-    <h2>🔥 Pedidos há preparar</h2>
+    <h2>🔥 Pedidos na Chapa</h2>
 
-    <?php if ($result->num_rows === 0) { ?>
+    <?php if ($pedidos->num_rows === 0) { ?>
         <div class="alert alert-success text-center fs-5">
             Nenhum pedido pendente 🙌
         </div>
     <?php } ?>
 
     <div class="d-flex flex-wrap justify-content-start">
-        <?php while ($p = $result->fetch_assoc()) { ?>
-            <div class="col-12 col-sm-6 col-md-4">
-                <div class="card h-100">
+        <?php while ($p = $pedidos->fetch_assoc()) { ?>
 
-                    <h4><?= htmlspecialchars($p['nome_cliente']) ?></h4>
-                    <p>🍔 <strong><?= htmlspecialchars($p['pedido']) ?></strong></p>
+    <?php
+    // Busca os itens desse pedido
+    $itens = $conn->query("
+        SELECT produto, quantidade
+        FROM itens_pedido
+        WHERE pedido_id = {$p['id']}
+    ");
+    ?>
 
-                    <?php if (!empty($p['observacoes'])) { ?>
-                        <p class="obs-alert">⚠️ <?= htmlspecialchars($p['observacoes']) ?></p>
-                    <?php } ?>
+    <div class="col-12 col-sm-6 col-md-4">
+        <div class="card h-100">
 
-                    <a href="concluir.php?id=<?= $p['id'] ?>" class="btn btn-success w-100 mt-2">
-                        ✅ Pedido pronto
-                    </a>
-                </div>
-            </div>
-        <?php } ?>
+            <h4><?= htmlspecialchars($p['nome_cliente']) ?></h4>
+
+            <ul class="list-group list-group-flush mb-2">
+                <?php while ($i = $itens->fetch_assoc()) { ?>
+                    <li class="list-group-item">
+                        🍔 <?= htmlspecialchars($i['produto']) ?>
+                        <strong>x<?= $i['quantidade'] ?></strong>
+                    </li>
+                <?php } ?>
+            </ul>
+
+            <?php if (!empty($p['observacoes'])) { ?>
+                <p class="obs-alert">⚠️ <?= htmlspecialchars($p['observacoes']) ?></p>
+            <?php } ?>
+
+            <a href="concluir.php?id=<?= $p['id'] ?>" class="btn btn-success w-100 mt-2">
+                ✅ Pedido pronto
+            </a>
+
+        </div>
+    </div>
+
+<?php } ?>
     </div>
 </div>
 </body>

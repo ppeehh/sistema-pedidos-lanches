@@ -25,7 +25,7 @@ $produtos = $conn->query("
 <body class="bg-light">
 
 <div class="container d-flex justify-content-center align-items-center vh-100">
-    <div class="card p-4 shadow w-100" style="max-width: 420px;">
+    <div class="card p-4 shadow w-100" style="max-width: 520px;">
 
         <!-- 🔽 MENU -->
         <div class="d-flex gap-2 mb-3">
@@ -57,32 +57,44 @@ $produtos = $conn->query("
                 required
             >
 
-            <!-- Produto -->
-            <select name="produto" class="form-select mb-2" required>
-                <option value="">Selecione o produto</option>
-                <?php while ($p = $produtos->fetch_assoc()) { ?>
-                    <option value="<?= htmlspecialchars($p['produto']) ?>">
-                        <?= htmlspecialchars($p['produto']) ?> (<?= $p['quantidade_atual'] ?> disponíveis)
-                    </option>
-                <?php } ?>
-            </select>
-
-            <!-- Quantidade -->
-            <input
-                class="form-control mb-2"
-                type="number"
-                name="quantidade"
-                placeholder="Quantidade"
-                min="1"
-                required
-            >
-
-            <!-- Observações -->
+            <!-- Observações gerais -->
             <textarea
                 class="form-control mb-3"
                 name="observacoes"
-                placeholder="Observações"
+                placeholder="Observações (ex: sem cebola, bem passado, etc)"
             ></textarea>
+
+            <!-- 🔽 PRODUTOS -->
+            <div id="produtos-container">
+
+                <div class="d-flex gap-2 mb-2 produto-item">
+                    <select name="produtos[]" class="form-select" required>
+                        <option value="">Selecione o produto</option>
+                        <?php while ($p = $produtos->fetch_assoc()) { ?>
+                            <option value="<?= htmlspecialchars($p['produto']) ?>">
+                                <?= htmlspecialchars($p['produto']) ?> (<?= $p['quantidade_atual'] ?> disponíveis)
+                            </option>
+                        <?php } ?>
+                    </select>
+
+                    <input
+                        type="number"
+                        name="quantidades[]"
+                        class="form-control"
+                        placeholder="Qtd"
+                        min="1"
+                        required
+                    >
+
+                    <button type="button" class="btn btn-danger btn-remove">✖</button>
+                </div>
+
+            </div>
+            <!-- 🔼 FIM PRODUTOS -->
+
+            <button type="button" class="btn btn-outline-secondary w-100 mb-3" id="add-produto">
+                ➕ Adicionar Produto
+            </button>
 
             <button class="btn btn-success w-100">
                 Enviar Pedido
@@ -91,6 +103,30 @@ $produtos = $conn->query("
 
     </div>
 </div>
+
+<script>
+    const container = document.getElementById('produtos-container');
+    const addBtn = document.getElementById('add-produto');
+
+    addBtn.addEventListener('click', () => {
+        const first = container.querySelector('.produto-item');
+        const clone = first.cloneNode(true);
+
+        clone.querySelector('select').value = '';
+        clone.querySelector('input').value = '';
+
+        container.appendChild(clone);
+    });
+
+    container.addEventListener('click', e => {
+        if (e.target.classList.contains('btn-remove')) {
+            const items = container.querySelectorAll('.produto-item');
+            if (items.length > 1) {
+                e.target.parentElement.remove();
+            }
+        }
+    });
+</script>
 
 </body>
 </html>
